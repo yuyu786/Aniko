@@ -13,8 +13,7 @@ from pyrogram.errors import *
 
 @Client.on_message(filters.command('random') & filters.private)
 async def search(client: Client, message: Message):
-    update_channel = BaseConfig.CHNL_NAME
-    if update_channel:
+    if update_channel := BaseConfig.CHNL_NAME:
         try:
             user = await client.get_chat_member(chat_id=f'@{BaseConfig.CHNL_NAME}', user_id=message.chat.id)
             if user.status == "kicked":
@@ -102,12 +101,9 @@ async def search(client: Client, message: Message):
             xx = random.choice(list(tk))
 
         vv = anime.get_by_genres(xx, '10')
-        new_list = []
-        for i in vv:
-            aha = i.animeid
-            new_list.append(aha)
+        new_list = [i.animeid for i in vv]
         extra = "\n".join(new_list)
-        await msg.edit_text(f'''
+                await msg.edit_text(f'''
 So The Randomised Genere is : `{xx}`
 Here are the 10 Anime in this Genere : 
 
@@ -116,10 +112,10 @@ Here are the 10 Anime in this Genere :
 **
 Now You May Use /search <anime name> To Get The Anime Information
 **''',
-parse_mode="markdown",
-                                  reply_markup=InlineKeyboardMarkup([
-                                      [InlineKeyboardButton("Join Channel",
-                                                            url=BaseConfig.CHNL_URL)],
-                                      [InlineKeyboardButton("Help Me On This Search!", "search")]]))
+        parse_mode="markdown",
+                                          reply_markup=InlineKeyboardMarkup([
+                                              [InlineKeyboardButton("Join Channel",
+                                                                    url=BaseConfig.CHNL_URL)],
+                                              [InlineKeyboardButton("Help Me On This Search!", "search")]]))
     except InvalidGenreNameError:
         await msg.edit_text('Oops\nRandom Got Problem On Network Error!\nTry Again Now\nStill Issuses : Conatct @Venilabots_1')
